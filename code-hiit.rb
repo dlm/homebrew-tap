@@ -1,34 +1,33 @@
 class CodeHiit < Formula
   desc "High-Intensity Interval Training for your typing skills"
   homepage "https://dlm.github.io/code-hiit/"
-  version "0.1.0-alpha.1"
+  version "0.1.0-alpha.2"
   license "MIT"
 
   on_macos do
     if Hardware::CPU.arm?
       url "https://github.com/dlm/code-hiit/releases/download/v#{version}/code-hiit-darwin-arm64"
-      sha256 "" # Will be updated automatically on release
+      sha256 "121814fdbe50d78466e1f53a51bac6809d870c4577d1c8679eea9430e17b40aa"
     else
-      url "https://github.com/dlm/code-hiit/releases/download/v#{version}/code-hiit-darwin-amd64"
-      sha256 "" # Will be updated automatically on release
+      odie "Only Apple Silicon (ARM64) is supported on macOS"
     end
   end
 
   on_linux do
-    if Hardware::CPU.arm?
-      url "https://github.com/dlm/code-hiit/releases/download/v#{version}/code-hiit-linux-arm64"
-      sha256 "" # Will be updated automatically on release
-    else
+    if Hardware::CPU.intel?
       url "https://github.com/dlm/code-hiit/releases/download/v#{version}/code-hiit-linux-amd64"
-      sha256 "" # Will be updated automatically on release
+      sha256 "8d4d038648fe39ba63bcd000272b3b7e1fdc6e052a462c9987450cb7f5eca763"
+    else
+      odie "Only AMD64 architecture is supported on Linux"
     end
   end
 
   def install
-    bin.install "code-hiit-darwin-arm64" => "code-hiit" if OS.mac? && Hardware::CPU.arm?
-    bin.install "code-hiit-darwin-amd64" => "code-hiit" if OS.mac? && Hardware::CPU.intel?
-    bin.install "code-hiit-linux-arm64" => "code-hiit" if OS.linux? && Hardware::CPU.arm?
-    bin.install "code-hiit-linux-amd64" => "code-hiit" if OS.linux? && Hardware::CPU.intel?
+    if OS.mac?
+      bin.install "code-hiit-darwin-arm64" => "code-hiit"
+    elsif OS.linux?
+      bin.install "code-hiit-linux-amd64" => "code-hiit"
+    end
   end
 
   test do
